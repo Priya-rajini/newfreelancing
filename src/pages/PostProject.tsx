@@ -10,6 +10,32 @@ export function PostProject() {
   const { user } = useUser();
   const navigate = useNavigate();
 
+  if (user.activeRoleView !== "client") {
+    return (
+      <div className="pt-28 pb-24 min-h-screen bg-[var(--color-void)] flex items-center justify-center">
+        <div className="max-w-md w-full px-4 text-center">
+          <div className="glass-strong rounded-2xl p-8 border border-white/5 shadow-2xl space-y-6 relative overflow-hidden">
+            <div 
+              className="absolute -top-24 -right-24 h-48 w-48 rounded-full blur-[80px] opacity-20 pointer-events-none"
+              style={{ backgroundColor: user.color }}
+            />
+            <h2 className="text-display text-xl font-bold text-white">Access Denied</h2>
+            <p className="text-sm text-[var(--color-muted)] leading-relaxed">
+              Freelancers are not permitted to publish projects. Please register as a Client to list custom engagements.
+            </p>
+            <Link
+              to="/dashboard"
+              className="inline-block py-2.5 px-6 rounded-xl text-black text-xs font-semibold hover:opacity-90 transition-opacity"
+              style={{ backgroundColor: user.color }}
+            >
+              Go to Dashboard
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Form states
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");

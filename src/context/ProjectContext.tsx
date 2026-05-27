@@ -3,7 +3,7 @@ import { useTalent } from "./TalentContext";
 import { stripSampleProposals, syncProjectProposalsWithTalent } from "../utils/proposals";
 import { computeMatch } from "../utils/matching";
 import { validateProposalAttachments } from "../utils/proposalAttachments";
-import { openProjects as mockOpenProjects, projects as mockActiveProjects } from "../data/mockData";
+
 
 export type ProjectType = "Fixed" | "Hourly";
 export type ProjectStatus = "Open" | "Active" | "Completed";
@@ -77,73 +77,7 @@ function normalizeProjects(raw: Project[]): Project[] {
 }
 
 function makeDefaultProjects(): Project[] {
-  const list: Project[] = [];
-
-  mockOpenProjects.forEach((p) => {
-    let budgetVal = 5000;
-    const cleanStr = p.budget.replace(/[^0-9–]/g, "");
-    if (cleanStr.includes("–")) {
-      const parts = cleanStr.split("–").map((num) => parseFloat(num));
-      if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
-        budgetVal = Math.round((parts[0] + parts[1]) / 2);
-      }
-    } else {
-      const parsed = parseFloat(cleanStr);
-      if (!isNaN(parsed)) budgetVal = parsed;
-    }
-
-    list.push({
-      id: p.id,
-      title: p.title,
-      description: p.description,
-      requiredSkills: p.skills,
-      budget: budgetVal,
-      deadline: "2026-07-15",
-      projectType: p.budgetHint.toLowerCase().includes("hour") ? "Hourly" : "Fixed",
-      status: "Open",
-      proposalsCount: 0,
-      proposals: [],
-      comments: [],
-      clientName: p.client,
-      clientEmail: `${p.client.toLowerCase().replace(/[^a-z0-9]/g, "")}@example.com`,
-    });
-  });
-
-  mockActiveProjects.forEach((p) => {
-    let budgetVal = parseFloat(p.budget.replace(/[^0-9.]/g, ""));
-    if (isNaN(budgetVal)) budgetVal = 8000;
-
-    list.push({
-      id: p.id,
-      title: p.title,
-      description: `Active contract for ${p.title}.`,
-      requiredSkills: ["React", "TypeScript"],
-      budget: budgetVal,
-      deadline: "2026-06-30",
-      projectType: "Fixed",
-      status: "Active",
-      proposalsCount: 1,
-      proposals: [
-        {
-          id: `prop-${p.id}-maya`,
-          freelancerId: "maya-chen",
-          freelancerEmail: "maya@chen.com",
-          coverMessage: "I would be happy to work on this engagement. Let's get started on the deliverables.",
-          matchScore: 94,
-          submittedAt: new Date(Date.now() - 86400000).toISOString(),
-          status: "approved",
-          bidAmount: p.budget,
-          timeline: "6 weeks",
-          attachments: [],
-        },
-      ],
-      comments: [],
-      clientName: p.client,
-      clientEmail: `${p.client.toLowerCase().replace(/[^a-z0-9]/g, "")}@example.com`,
-    });
-  });
-
-  return list;
+  return [];
 }
 
 interface ProjectContextType {
@@ -175,7 +109,7 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
   const { talentPool } = useTalent();
 
   const [projects, setProjects] = useState<Project[]>(() => {
-    const saved = localStorage.getItem("skillsync_projects");
+    const saved = localStorage.getItem("skillsync_projects_v2");
     if (saved) {
       try {
         return normalizeProjects(JSON.parse(saved) as Project[]);
@@ -194,7 +128,7 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
   );
 
   useEffect(() => {
-    localStorage.setItem("skillsync_projects", JSON.stringify(projects));
+    localStorage.setItem("skillsync_projects_v2", JSON.stringify(projects));
   }, [projects]);
 
   useEffect(() => {

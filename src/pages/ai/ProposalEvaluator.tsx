@@ -8,24 +8,24 @@ import { useProjects, type ProposalStatus } from "../../context/ProjectContext";
 import { useUser } from "../../context/UserContext";
 import { ProposalAttachmentList } from "../../components/ui/ProposalAttachmentList";
 
-function ProposalStatusBanner({ status }: { status: ProposalStatus }) {
+function ProposalStatusBanner({ status, isClient }: { status: ProposalStatus; isClient: boolean }) {
   if (status === "approved") {
     return (
       <p className="text-sm text-[var(--color-mint)] flex items-center gap-2">
-        <CheckCircle2 size={16} /> You approved this proposal.
+        <CheckCircle2 size={16} /> {isClient ? "You approved this proposal." : "This proposal has been approved! You can now start working together."}
       </p>
     );
   }
   if (status === "denied") {
     return (
       <p className="text-sm text-red-400 flex items-center gap-2">
-        <XCircle size={16} /> You declined this proposal.
+        <XCircle size={16} /> {isClient ? "You declined this proposal." : "This proposal was declined by the client."}
       </p>
     );
   }
   return (
     <p className="text-sm text-[var(--color-muted)]">
-      Pending your decision — review the proposal and AI metrics below.
+      {isClient ? "Pending your decision — review the proposal and AI metrics below." : "Pending client review."}
     </p>
   );
 }
@@ -105,9 +105,9 @@ export function ProposalEvaluator() {
           <p className="text-[var(--color-muted)] mt-2">
             {freelancer.name} · {project.title}
           </p>
-          {proposal && isClient && (
+          {proposal && (
             <div className="mt-3">
-              <ProposalStatusBanner status={proposal.status} />
+              <ProposalStatusBanner status={proposal.status} isClient={isClient} />
             </div>
           )}
         </RevealSection>
@@ -120,8 +120,15 @@ export function ProposalEvaluator() {
                 {proposal.coverMessage}
               </p>
               <ProposalAttachmentList attachments={proposal.attachments} />
-              <div className="mt-4 pt-3 border-t border-white/5 text-xs text-[var(--color-muted)]">
-                Freelancer Email: <strong className="text-white font-semibold">{proposal.freelancerEmail}</strong>
+              <div className="mt-4 pt-3 border-t border-white/5 text-xs text-[var(--color-muted)] space-y-1.5">
+                <div>
+                  Freelancer Email: <strong className="text-white font-semibold">{proposal.freelancerEmail}</strong>
+                </div>
+                {!isClient && proposal.status === "approved" && (
+                  <div>
+                    Client Email: <strong className="text-white font-semibold">{project.clientEmail || "client@example.com"}</strong>
+                  </div>
+                )}
               </div>
             </div>
           </RevealSection>

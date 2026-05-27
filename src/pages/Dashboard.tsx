@@ -30,7 +30,6 @@ import {
   LogOut,
   FolderKanban,
   Briefcase,
-  Globe,
   Wallet,
   Star,
 } from "lucide-react";
@@ -535,7 +534,7 @@ export function Dashboard() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-6 text-left">
+          <div className="grid md:grid-cols-2 gap-6 text-left max-w-2xl mx-auto">
             {/* CARD 1: FREELANCER */}
             <motion.div
               whileHover={{ y: -6, scale: 1.01 }}
@@ -581,30 +580,6 @@ export function Dashboard() {
               </p>
               <div className="mt-auto text-[10px] text-[var(--color-muted)] border-t border-white/5 pt-4 font-mono">
                 TALENT CAP: 12K+ • DEPOSITED FUNDS: $4.5M
-              </div>
-            </motion.div>
-
-            {/* CARD 3: BOTH */}
-            <motion.div
-              whileHover={{ y: -6, scale: 1.01 }}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3, type: "spring" }}
-              onClick={() => handleRoleSelect("both")}
-              className="glass p-6 rounded-2xl border border-white/5 cursor-pointer hover:border-[var(--color-sky)]/30 group transition-all relative overflow-hidden bg-white/[0.005]"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-sky)]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="h-10 w-10 rounded-xl bg-[var(--color-sky)]/10 flex items-center justify-center text-[var(--color-sky)] mb-6 border border-[var(--color-sky)]/25">
-                <Globe size={20} />
-              </div>
-              <h3 className="font-semibold text-lg mb-2 group-hover:text-[var(--color-sky)] transition-colors">
-                Dual Agency (Both)
-              </h3>
-              <p className="text-xs text-[var(--color-muted)] leading-relaxed mb-6">
-                Deliver services as a freelancer and hire contractors as a buyer under one unified dashboard account.
-              </p>
-              <div className="mt-auto text-[10px] text-[var(--color-muted)] border-t border-white/5 pt-4 font-mono">
-                HYBRID PIPELINE: UNIFIED SWITCH
               </div>
             </motion.div>
           </div>

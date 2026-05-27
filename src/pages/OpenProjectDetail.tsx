@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { RevealSection } from "../components/ui/RevealSection";
 import { ProposalForm } from "../components/proposals/ProposalForm";
 import { useProjects } from "../context/ProjectContext";
+import { useUser } from "../context/UserContext";
 import { ArrowLeft, MapPin, Clock, Users, Zap } from "lucide-react";
 
 function formatDeadline(deadline: string) {
@@ -20,6 +21,7 @@ function formatDeadline(deadline: string) {
 export function OpenProjectDetail() {
   const { id } = useParams();
   const { projects } = useProjects();
+  const { user } = useUser();
   const project = projects.find((p) => p.id === id) || projects.find((p) => p.id === "arcadia-react-dashboard") || projects[0];
 
   if (!project) {
@@ -131,18 +133,40 @@ export function OpenProjectDetail() {
 
           <aside className="lg:sticky lg:top-28">
             <RevealSection direction="right">
-              <div className="glass rounded-2xl p-6 md:p-8 border border-[var(--color-border-strong)]">
-                <h2 className="font-medium text-lg mb-1 text-white">Submit your proposal</h2>
-                <p className="text-sm text-[var(--color-muted)] mb-6">
-                  Custom bid, timeline, and cover message — scored by SkillSync AI.
-                </p>
-                <ProposalForm
-                  projectId={project.id}
-                  projectTitle={project.title}
-                  clientName={clientName}
-                  suggestedBudget={budgetStr}
-                  suggestedTimeline={timelineStr}
+              <div className="glass rounded-2xl p-6 md:p-8 border border-[var(--color-border-strong)] relative overflow-hidden">
+                <div 
+                  className="absolute -top-24 -right-24 h-48 w-48 rounded-full blur-[80px] opacity-15 pointer-events-none"
+                  style={{ backgroundColor: user.color }}
                 />
+                {user.activeRoleView === "client" ? (
+                  <>
+                    <h2 className="font-medium text-lg mb-1 text-white">Client Portal</h2>
+                    <p className="text-sm text-[var(--color-muted)] mb-6 leading-relaxed">
+                      You are currently viewing this project page in Client View. Clients cannot submit project proposals.
+                    </p>
+                    <Link
+                      to="/dashboard"
+                      className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-black font-semibold text-xs hover:opacity-90 transition-opacity text-center"
+                      style={{ backgroundColor: user.color }}
+                    >
+                      Go to Dashboard
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <h2 className="font-medium text-lg mb-1 text-white">Submit your proposal</h2>
+                    <p className="text-sm text-[var(--color-muted)] mb-6">
+                      Custom bid, timeline, and cover message — scored by SkillSync AI.
+                    </p>
+                    <ProposalForm
+                      projectId={project.id}
+                      projectTitle={project.title}
+                      clientName={clientName}
+                      suggestedBudget={budgetStr}
+                      suggestedTimeline={timelineStr}
+                    />
+                  </>
+                )}
               </div>
             </RevealSection>
           </aside>

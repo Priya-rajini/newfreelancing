@@ -71,13 +71,15 @@ export function Navbar() {
             
             {user.isRegistered ? (
               <div className="flex items-center gap-3 pl-3 border-l border-white/10">
-                <Link
-                  to="/post-project"
-                  className="px-3 py-1.5 rounded-lg text-black hover:opacity-95 font-semibold text-[11px] transition-all flex items-center gap-1 shadow-sm shrink-0 mr-1"
-                  style={{ backgroundColor: user.color }}
-                >
-                  <Plus size={11} /> Post Job
-                </Link>
+                {user.activeRoleView === "client" && (
+                  <Link
+                    to="/post-project"
+                    className="px-3 py-1.5 rounded-lg text-black hover:opacity-95 font-semibold text-[11px] transition-all flex items-center gap-1 shadow-sm shrink-0 mr-1"
+                    style={{ backgroundColor: user.color }}
+                  >
+                    <Plus size={11} /> Post Job
+                  </Link>
+                )}
                 {user.role === "both" && (
                   <div className="flex bg-white/5 rounded-lg p-0.5 border border-white/5">
                     <button

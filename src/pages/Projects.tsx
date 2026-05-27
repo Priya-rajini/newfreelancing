@@ -77,14 +77,16 @@ export function Projects() {
               Browse open listings, submit proposals with your bid and timeline, or track active work.
             </p>
           </RevealSection>
-          <RevealSection delay={0.1}>
-            <Link
-              to="/post-project"
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-[var(--color-border-strong)] text-sm hover:border-[var(--color-warm)]/40 transition-colors self-start text-white"
-            >
-              <Plus size={16} /> Post a project
-            </Link>
-          </RevealSection>
+          {user.activeRoleView === "client" && (
+            <RevealSection delay={0.1}>
+              <Link
+                to="/post-project"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-[var(--color-border-strong)] text-sm hover:border-[var(--color-warm)]/40 transition-colors self-start text-white"
+              >
+                <Plus size={16} /> Post a project
+              </Link>
+            </RevealSection>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-2 mt-10 p-1 glass rounded-xl w-fit">

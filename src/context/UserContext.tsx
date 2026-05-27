@@ -101,7 +101,7 @@ interface StoredAccount {
   profile: UserProfile;
 }
 
-const ACCOUNTS_KEY = "skillsync_accounts";
+const ACCOUNTS_KEY = "skillsync_accounts_v2";
 
 function normalizeEmail(email: string) {
   return email.trim().toLowerCase();
@@ -211,7 +211,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile>(() => {
-    const saved = localStorage.getItem("skillsync_user_profile");
+    const saved = localStorage.getItem("skillsync_user_profile_v2");
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as UserProfile;
@@ -259,7 +259,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (user.isRegistered) {
-      localStorage.setItem("skillsync_user_profile", JSON.stringify(user));
+      localStorage.setItem("skillsync_user_profile_v2", JSON.stringify(user));
     }
   }, [user]);
 
@@ -332,7 +332,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       withdrawals: defaultWithdrawals as Withdrawal[],
       clientReviews: defaultClientReviews,
     });
-    localStorage.removeItem("skillsync_user_profile");
+    localStorage.removeItem("skillsync_user_profile_v2");
   };
 
   const login = (email: string, password: string): string | null => {
@@ -739,80 +739,21 @@ export interface Withdrawal {
 export type DeliverableStatus = "pending" | "submitted" | "approved";
 
 // Default Mock Data for workspaces
-const defaultContracts: ActiveContract[] = [
-  {
-    id: "c-1",
-    projectTitle: "Vault API Refactoring",
-    clientName: "Vault FinTech",
-    clientColor: "#c084fc",
-    budget: "$4,500",
-    dueDate: "June 15, 2026",
-    progress: 33,
-    status: "active",
-    deliverables: [
-      { id: "d-1", title: "API Endpoint Specs & Design", status: "approved" },
-      { id: "d-2", title: "Middleware Integration & OAuth", status: "pending" },
-      { id: "d-3", title: "Testing Suite & Documentation", status: "pending" },
-    ],
-    files: [
-      { id: "f-1", name: "vault_api_docs_v2.pdf", size: "1.2 MB", uploadedAt: "May 20" },
-    ],
-    messages: [
-      { id: "m-1", from: "client", text: "Welcome to the workspace! Let's get started on the middleware flow first.", time: "10:14 AM" },
-      { id: "m-2", from: "freelancer", text: "Absolutely, I am drafting the schema mockups today.", time: "11:05 AM" },
-    ],
-  },
-  {
-    id: "c-2",
-    projectTitle: "Marketing Landing Page Redesign",
-    clientName: "EcoSphere Corp",
-    clientColor: "#6ee7b7",
-    budget: "$2,800",
-    dueDate: "June 20, 2026",
-    progress: 100,
-    status: "completed",
-    deliverables: [
-      { id: "d-4", title: "Hero Section Prototypes", status: "approved" },
-      { id: "d-5", title: "Interactive Tailwind Assembly", status: "approved" },
-    ],
-    files: [],
-    messages: [],
-  },
-];
+const defaultContracts: ActiveContract[] = [];
 
 const defaultEarnings = {
-  total: 7300,
-  available: 2800,
-  pending: 4500,
+  total: 0,
+  available: 0,
+  pending: 0,
 };
 
-const defaultWithdrawals: Withdrawal[] = [
-  { id: "w-1", amount: 4500, date: "May 10, 2026", status: "completed", method: "Bank Transfer (**** 4820)" },
-];
+const defaultWithdrawals: Withdrawal[] = [];
 
-const defaultClientReviews = [
-  {
-    id: "r-1",
-    author: "Sarah Jenkins",
-    company: "EcoSphere Corp",
-    rating: 5,
-    text: "Exceptional UI design and smooth communication. The landing page load speed is blazing fast now and our conversion rates increased immediately.",
-    date: "May 12, 2026",
-  },
-  {
-    id: "r-2",
-    author: "Marcus Vance",
-    company: "Vault FinTech",
-    rating: 5,
-    text: "Maya is an incredible product designer. Her refactoring of our onboarding flows reduced drop-off by 28% and set a new standard for our entire product design system.",
-    date: "April 28, 2026",
-  },
-  {
-    id: "r-3",
-    author: "Dr. David Kincaid",
-    company: "Peak Labs",
-    rating: 5,
-    text: "Brilliant components architecture and clean React/TypeScript code. Clean implementation, high attention to detail, and fast delivery of our analytics UI. Absolute professional!",
-    date: "March 15, 2026",
-  },
-];
+const defaultClientReviews: {
+  id: string;
+  author: string;
+  company: string;
+  rating: number;
+  text: string;
+  date: string;
+}[] = [];
